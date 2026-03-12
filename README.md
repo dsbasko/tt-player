@@ -21,6 +21,7 @@ TTS Player solves this: one hotkey — and any text is read aloud by a neural vo
 - **Now Playing** — integration with the Now Playing widget and media keys
 - **Menu bar icon** — full control without extra windows
 - **Customizable hotkey** — reassign directly from the menu
+- **CLI playback** — read clipboard aloud from terminal (`tts_player play`)
 - **Unix socket** — IPC for external control
 
 ## How It Works
@@ -49,6 +50,7 @@ make install    # Build and install to /usr/local/bin/
 Other commands:
 
 ```bash
+make play       # Read clipboard text aloud via TTS
 make kill       # Stop the running player
 make uninstall  # Remove binary and data directory
 make clean      # Remove local binary
