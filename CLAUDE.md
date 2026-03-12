@@ -28,6 +28,7 @@ make run        # Build and run
 make install    # Build and copy to /usr/local/bin/
 make uninstall  # Remove binary and data directory
 make kill       # Stop running player
+make play       # Read clipboard and play TTS
 make clean      # Remove local binary
 ```
 

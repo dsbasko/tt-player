@@ -3,7 +3,7 @@ VENV_DIR = $(DATA_DIR)/.venv
 BIN_DIR = /usr/local/bin
 BINARY = tts_player
 
-.PHONY: build setup install uninstall clean run kill status
+.PHONY: build setup install uninstall clean run kill status play
 
 build:
 	swiftc -O -o $(BINARY) tts_player.swift
@@ -39,3 +39,6 @@ status:
 
 kill:
 	@$(BIN_DIR)/$(BINARY) kill 2>/dev/null || ./$(BINARY) kill 2>/dev/null || echo "Not running (binary not found)"
+
+play:
+	@$(BIN_DIR)/$(BINARY) play 2>/dev/null || ./$(BINARY) play 2>/dev/null || echo "Binary not found. Run: make build"
