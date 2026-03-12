@@ -1087,11 +1087,43 @@ if args.count > 1 {
         }
         exit(0)
 
+    case "play":
+        guard let text = NSPasteboard.general.string(forType: .string), !text.isEmpty else {
+            fputs("Error: clipboard is empty or contains no text\n", stderr)
+            exit(1)
+        }
+        let lang = detectLanguage(text)
+        let voice = lang == "ru" ? VOICE_RU : VOICE_EN
+        let pid = ProcessInfo.processInfo.processIdentifier
+        let timestamp = Int(Date().timeIntervalSince1970)
+        let tempFile = "/tmp/tts_input_\(pid)_\(timestamp).txt"
+        do {
+            try text.write(toFile: tempFile, atomically: true, encoding: .utf8)
+        } catch {
+            fputs("Error: failed to write temp file: \(error.localizedDescription)\n", stderr)
+            exit(1)
+        }
+        if !isAlreadyRunning() {
+            launchDaemon()
+            var waited = 0.0
+            while waited < 3.0 && !isAlreadyRunning() {
+                Thread.sleep(forTimeInterval: 0.2)
+                waited += 0.2
+            }
+            if !isAlreadyRunning() {
+                fputs("Error: failed to start TTS Player daemon\n", stderr)
+                exit(1)
+            }
+        }
+        _ = sendSocketCommand("TTS:\(voice):\(tempFile)")
+        print("Playing clipboard text (\(text.count) chars, \(lang))")
+        exit(0)
+
     case "--daemon":
         break // continue to app launch below
 
     default:
-        fputs("Usage: tts_player [status|kill]\n", stderr)
+        fputs("Usage: tts_player [status|kill|play]\n", stderr)
         exit(1)
     }
 }
